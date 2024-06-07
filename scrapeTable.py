@@ -79,3 +79,45 @@ def scrapeSERTable(table) -> List[Dict[str, str]]:
         )
 
     return data
+
+
+# Pubfin Scraper #######################################################################
+
+
+def scrapePubfinTable(table) -> List[Dict[str, str]]:
+    rows = table.find_all("div", {"class": "table-module__row"})
+
+    data = []
+    for row in rows:
+        cols = row.find_all("div", {"class": "table-module__column"})
+
+        # Column 1: Class
+        clss = getFirstPContents(cols[0])
+
+        # Column 2: Maturity Date
+        matDate = getFirstPContents(cols[1])
+
+        # Column 3: Rating Type
+        rType = getFirstPContents(cols[2])
+
+        # Column 4: Rating
+        rating = getFirstH5Contents(cols[3])
+
+        # Column 5: Rating Date
+        ratDate = getFirstPContents(cols[4])
+
+        # Column 6: Last Review Date
+        revDate = getFirstPContents(cols[5])
+
+        data.append(
+            {
+                "Class": clss,
+                "Maturity Date": matDate,
+                "Rating Type": rType,
+                "Rating": rating,
+                "Rating Date": ratDate,
+                "Last Review Date": revDate,
+            }
+        )
+
+    return data

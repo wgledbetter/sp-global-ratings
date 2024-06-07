@@ -13,5 +13,5 @@ ENTITIES = {
     "Cumulus Media": {"sectorCode": "CORP", "entityId": 324702},
     "CVS": {"sectorCode": "CORP", "entityId": 101476},
     # Sector Code PUBFIN
-    # "Cortland": {"sectorCode": "PUBFIN", "entityId": 15855},
+    "Cortland": {"sectorCode": "PUBFIN", "entityId": 15855},
 }
