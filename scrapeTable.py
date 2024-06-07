@@ -1,26 +1,81 @@
+from typing import Dict
 from typing import List
 
 from bs4 import BeautifulSoup
 
+# Utils ################################################################################
 
-def scrapeTableStyle1(table: BeautifulSoup) -> List[List[str]]:
+
+def getFirstPContents(thingWithP: BeautifulSoup) -> str:
+    return thingWithP.find_all("p")[0].contents[0].strip()
+
+
+def getFirstH5Contents(thingWithH5: BeautifulSoup) -> str:
+    return thingWithH5.find_all("h5")[0].contents[0].strip()
+
+
+# Primary Table Scraper ################################################################
+
+
+def scrapeTableStyle1(table: BeautifulSoup) -> List[Dict[str, str]]:
     rows = table.find_all("div", {"class": "table-module__row"})
 
     data = []
     for row in rows:
         cols = row.find_all("div", {"class": "table-module__column"})
         # Column 1: Type
-        type = cols[0].find_all("p")[0].contents[0]
+        type = getFirstPContents(cols[0])
 
         # Column 2: Rating
-        rating = cols[1].find_all("h5")[0].contents[0]
+        rating = getFirstH5Contents(cols[1])
 
         # Column 3: Rating Date
-        ratingDate = cols[2].find_all("p")[0].contents[0]
+        ratingDate = getFirstPContents(cols[2])
 
         # Column 4: Review Date
-        reviewDate = cols[3].find_all("p")[0].contents[0]
+        reviewDate = getFirstPContents(cols[3])
 
-        data.append([type, rating, ratingDate, reviewDate])
+        data.append(
+            {
+                "Type": type,
+                "Rating": rating,
+                "Rating Date": ratingDate,
+                "Review Date": reviewDate,
+            }
+        )
+
+    return data
+
+
+# Evaluation Rankings Scraper ##########################################################
+
+
+def scrapeSERTable(table) -> List[Dict[str, str]]:
+    rows = table.find_all("div", {"class": "table-module__row"})
+
+    data = []
+    for row in rows:
+        cols = row.find_all("div", {"class": "table-module__column"})
+
+        # Column 1: Country
+        country = getFirstPContents(cols[0])
+
+        # Column 2: Operation
+        op = getFirstPContents(cols[1])
+
+        # Column 3: Ranking
+        rank = getFirstH5Contents(cols[2])
+
+        # Column 4: Ranking Date
+        rDate = getFirstPContents(cols[3])
+
+        data.append(
+            {
+                "Country": country,
+                "Operation": op,
+                "Ranking": rank,
+                "Ranking Date": rDate,
+            }
+        )
 
     return data
